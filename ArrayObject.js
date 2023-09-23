@@ -1,41 +1,38 @@
 <html>
 <body>
 <script>
-import React, { Component } from 'react';
+const products = [
+  { name: "Product 1", price: 20, category: "Electronics" },
+  { name: "Product 2", price: 30, category: "Clothes" },
+  { name: "Product 3", price: 40, category: "Electronics" },
+  { name: "Product 4", price: 50, category: "Clothes" },
+  { name: "Product 5", price: 60, category: "Clothes" },
+  { name: "Product 6", price: 70, category: "Electronics" },
+  { name: "Product 7", price: 80, category: "Clothes" },
+  { name: "Product 8", price: 90, category: "Electronics" }
+];
 
-class ChangingColor extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      color: '#FF0FF'
-    };
+// Use reduce to create a dictionary with category as the key and an array of products as the value
+const productsByCategory = products.reduce((acc, product) => {
+  const category = product.category;
+  if (!acc[category]) {
+    acc[category] = [];
   }
+  acc[category].push(product);
+  return acc;
+}, {});
 
-  redHandler = () => {
-    this.setState({ color: '#FF0000' });
-  };
+// Use map to calculate the average price for each category
+const avgPriceByCategory = Object.keys(productsByCategory).map(category => {
+  const sum = productsByCategory[category].reduce((acc, product) => acc + product.price, 0);
+  return { category: category, average: sum / productsByCategory[category].length };
+});
 
-  greenHandler = () => {
-    this.setState({ color: '#00FF00' });
-  };
+// Use filter to only select categories with an average above a certain threshold
+const highPricedCategories = avgPriceByCategory.filter(category => category.average > 50);
 
-  blueHandler = () => {
-    this.setState({ color: '#0000FF' });
-  };
+console.log(highPricedCategories);
 
-  render() {
-    return (
-      <div>
-        <h1 style={{ color: this.state.color }}>Hello</h1>
-        <button onClick={this.redHandler}>Red</button>
-        <button onClick={this.greenHandler}>Green</button>
-        <button onClick={this.blueHandler}>Blue</button>
-      </div>
-    );
-  }
-}
-
-export default ChangingColor;
 </script>
 </body>
 </html>
